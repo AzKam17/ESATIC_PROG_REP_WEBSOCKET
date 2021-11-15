@@ -5,14 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}{% endblock %} - ESATIC WebSocket </title>
     {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
+        {{ encore_entry_link_tags('vue') }}
     {% endblock %}
 </head>
-<body>
+<body >
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">ESATIC WebSocket </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
         <div class="collapse navbar-collapse" id="navbarColor01">
             <ul class="navbar-nav me-auto">
@@ -31,7 +34,7 @@
 
 {% block javascripts %}
     <script src="{{ asset('/fabric.js') }}"></script>
-    {{ encore_entry_script_tags('app') }}
+    {{ encore_entry_script_tags('vue') }}
 {% endblock %}
 <!-- Footer -->
 <footer class="page-footer font-small blue bg-primary fixed-bottom">

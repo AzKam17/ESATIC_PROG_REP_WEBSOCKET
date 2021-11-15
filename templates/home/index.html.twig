@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Home Page{% endblock %}
+
+{% block body %}
+    <div class="container mt-5 mb-5" style="margin-bottom: 5rem !important;">
+
+        {# Pseudo Box #}
+        <div id="pseudo" class="card bg-secondary mb-3 w-100">
+            <div class="card-header">Pseudo</div>
+            <div class="card-body">
+                <h4 class="card-title mt-2 mb-2">Veuillez entrer un pseudo pour pouvoir utiliser l'application.</h4>
+
+                <div class="form-group">
+                    <input id="pseudoInput" type="text" class="form-control" placeholder="Votre pseudo">
+                </div>
+                <button id="validerPseudo" type="button" class="btn btn-primary w-100 mt-2">Valider</button>
+            </div>
+        </div>
+
+        {# Lobby Box #}
+        <div id="lobby" class="card bg-secondary mb-3 w-100">
+            <div class="card-header"><span>Accueil</span> <span id="msgLobbyWelcome" class="float-end"></span></div>
+            <div class="card-body">
+                <h4 id="nbRoomsDispo" class="card-title mt-2 mb-2"></h4>
+                <hr>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th scope="col">Salle</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tableChoixRoom"></tbody>
+                </table>
+            </div>
+        </div>
+
+
+        <div id="room" class="card bg-secondary mb-3 w-100 h-100 pb-5">
+            <div class="card-header"><span id="roomName">Salle des zinzins</span> <button id="returnLobby" class="btn btn-outline-secondary bg-white text-danger float-end">Retour</button></div>
+            <div class="card-body h-100">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-5 col-md-12">
+                            <h4 class="card-title mt-2 mb-2">Paint</h4>
+                            <hr>
+                            <canvas id="myCanvas" class="w-100 h-100 mx-auto mb-2" style="border: solid black 2px; min-height: 190px; max-height: 190px;" ng-mousedown="testCanvas()"></canvas>
+                            <div class="tools mt-5 pt-3">
+                                <button class="btn color" id="Red" style="background-color:red"></button>
+                                <button class="btn color" id="Orange" style="background-color:orange"></button>
+                                <button class="btn color" id="Yellow" style="background-color:yellow"></button>
+                                <button class="btn color" id="Green" style="background-color:green"></button>
+                                <button class="btn color" id="Blue" style="background-color:blue"></button>
+                                <button class="btn color" id="Indigo" style="background-color:indigo"></button>
+                                <button class="btn color" id="Violet" style="background-color:violet"></button>
+                                <button class="btn color" id="Black" style="background-color:black"></button>
+
+                                <input type="range" min="1" max="100" class="pen-range">
+
+                                <button id="clearCanvas" type="button" class="btn btn-outline-danger">Tout effacer</button>
+                            </div>
+
+                        </div>
+                        <br>
+                        <div class="col-lg-7 col-md-12 pb-5">
+                            <h4 class="card-title mt-2 mb-2">Chat</h4>
+                            <hr>
+                            <div name="" id="chatBox" class="w-100 h-75 border-danger border-1 bg-white" style="overflow: scroll; max-height: 300px;"></div>
+                            <input id="roomInput" type="text" class="form-control mt-1 mb-1" placeholder="Message">
+                            <button id="roomMessageSendBtn" type="button" class="btn btn-primary w-100">Envoyer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
