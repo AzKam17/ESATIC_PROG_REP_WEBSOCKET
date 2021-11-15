@@ -26,15 +26,13 @@ class WebsocketServerCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         //Port d'exécution du serveur
-        $port = 3000;
         $output->writeln("[ - CUSTOM PHP WEBSOCKET SERVER - ] \t \t Starting server on port " . $port);
         $server = IoServer::factory(
             new HttpServer(
                 new WsServer(
                     $this->messageHandler
                 )
-            ),
-            $port
+            )
         );
         $server->run();
 
