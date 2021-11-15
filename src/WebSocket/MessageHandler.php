@@ -113,11 +113,11 @@ class MessageHandler implements MessageComponentInterface
                 foreach ($this->roomManager->getRooms() as $r){
                     //Si la room est trouvée on enregistre dans la base de données
                     if($r->getId() === intval($msg1->getCode())){
-                        $this->bus->dispatch(new SaveMessage($r, $msg1));
-                        /*$msg1->setCode(null);
+                        //$this->bus->dispatch(new SaveMessage($r, $msg1));
+                        $msg1->setCode(null);
                         $msg1->setRoom($r);
                         $this->em->persist($msg1);
-                        $this->em->flush();*/
+                        $this->em->flush();
                     }
                 }
 
@@ -169,11 +169,11 @@ class MessageHandler implements MessageComponentInterface
                 foreach ($this->roomManager->getRooms() as $r){
                     //Si la room est trouvée on enregistre dans la base de données
                     if($r->getId() === intval($msg1->getCode())){
-                        $this->bus->dispatch(new SaveMessage($r, $msg1));
-                        /*$msg1->setCode(null);
+                        //$this->bus->dispatch(new SaveMessage($r, $msg1));
+                        $msg1->setCode(null);
                         $msg1->setRoom($r);
                         $this->em->persist($msg1);
-                        $this->em->flush();*/
+                        $this->em->flush();
                     }
                 }
 
