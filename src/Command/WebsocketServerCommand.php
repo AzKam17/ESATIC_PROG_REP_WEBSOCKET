@@ -25,25 +25,18 @@ class WebsocketServerCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $port = 3000;
         //Port d'exécution du serveur
         $output->writeln("[ - CUSTOM PHP WEBSOCKET SERVER - ] \t \t Starting server on port " . $port);
         $server = IoServer::factory(
             new HttpServer(
                 new WsServer(
                     $this->messageHandler
-                )
+                ),
+                $port
             )
         );
         $server->run();
-
-        //Appel de la commande async
-        $command = $this->getApplication()->find('messenger:consume');
-
-        $arguments = [
-            'receivers'    => ['async']
-        ];
-
-        $command->run(new ArrayInput($arguments), $output);
 
         return 0;
     }
