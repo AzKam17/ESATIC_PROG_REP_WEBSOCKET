@@ -191,7 +191,7 @@ function init(){
     /*
         Fonctions WebSocket
      */
-    const socket = new WebSocket(`wss://${location.hostname}`);
+    const socket = new WebSocket(`wss://${location.hostname}:3000`);
 
     socket.addEventListener("open", function() {
         console.log("Connexion réussie au serveur WebSocket");
