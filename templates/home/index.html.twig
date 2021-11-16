@@ -22,7 +22,7 @@
         <div id="lobby" class="card bg-secondary mb-3 w-100">
             <div class="card-header"><span>Accueil</span> <span id="msgLobbyWelcome" class="float-end"></span></div>
             <div class="card-body">
-                <h4 id="nbRoomsDispo" class="card-title mt-2 mb-2"></h4>
+                <h4 id="nbRoomsDispo" class="card-title mt-2 mb-2 d-inline"></h4> <button id="newRoomBtn" type="button" class="btn btn-success float-end">Créer une nouvelle salle.</button>
                 <hr>
                 <table class="table table-hover">
                     <thead>
@@ -36,9 +36,23 @@
             </div>
         </div>
 
-
+        {# Room Box #}
         <div id="room" class="card bg-secondary mb-3 w-100 h-100 pb-5">
-            <div class="card-header"><span id="roomName">Salle des zinzins</span> <button id="returnLobby" class="btn btn-outline-secondary bg-white text-danger float-end">Retour</button></div>
+            <div class="card-header">
+                <b>
+                    <span id="roomName">Salle des zinzins</span>
+                </b>
+                &nbsp;
+                <span>|</span>
+                &nbsp;
+                <button id="bounce" type="button" class="btn btn-success btn-sm animateRoom">Bounce</button>
+                <button id="flash" type="button" class="btn btn-light btn-sm animateRoom">Flash</button>
+                <button id="tada" type="button" class="btn btn-dark btn-sm animateRoom">Tada</button>
+                <button id="wobble" type="button" class="btn btn-light btn-sm animateRoom">Wobble</button>
+                <button id="jello" type="button" class="btn btn-success btn-sm animateRoom">Jello</button>
+
+                <button class="btn btn-danger float-end returnLobby">Retour</button>
+            </div>
             <div class="card-body h-100">
                 <div class="container">
                     <div class="row">
@@ -55,9 +69,7 @@
                                 <button class="btn color" id="Indigo" style="background-color:indigo"></button>
                                 <button class="btn color" id="Violet" style="background-color:violet"></button>
                                 <button class="btn color" id="Black" style="background-color:black"></button>
-
                                 <input type="range" min="1" max="100" class="pen-range">
-
                                 <button id="clearCanvas" type="button" class="btn btn-outline-danger">Tout effacer</button>
                             </div>
 
@@ -72,6 +84,31 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        {# New Room #}
+        <div id="newRoom" class="card bg-secondary">
+            <div class="card-header">
+                <span>Créer une nouvelle salle</span>
+                <button type="button" class="btn btn-danger returnLobby float-end">Retour au lobby</button>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title mt-2 mb-2">Veuillez entrer le nom de la nouvelle salle.</h4>
+                <div class="form-group">
+                    <input id="newRoomInput" type="text" class="form-control" placeholder="Nom de la nouvelle salle">
+                </div>
+                <button id="createNewRoom" type="button" class="btn btn-primary w-100 mt-2">Valider</button>
+            </div>
+        </div>
+
+        {# Lost Connection #}
+        <div id="noConnection" class="card bg-secondary">
+            <div class="card-header">
+                <b>Connexion perdue</b>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title mt-2 mb-2">La connexion au serveur a été perdue, veuillez réessayer plus tard.</h4>
             </div>
         </div>
     </div>

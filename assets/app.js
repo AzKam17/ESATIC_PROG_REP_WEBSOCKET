@@ -40,7 +40,9 @@ function init(){
     let state = {
         pseudo: false,
         lobby: false,
-        room: false
+        room: false,
+        newRoom: false,
+        noConnection: false,
     }
 
     //Store pour stocker les messages
@@ -55,6 +57,7 @@ function init(){
     //On cache tout les éléments au départ
     $("#pseudo").hide();
     $("#lobby").hide();
+    $("#newRoom").hide();
     setTimeout(() => {
         $("#room").hide();
     }, 500)
@@ -120,9 +123,20 @@ function init(){
                         $("<button/>")
                             .text("Rejoindre")
                             .attr("type", "button")
-                            .addClass("btn btn-primary btn-sm room-btn")
+                            .addClass("btn btn-primary btn-sm room-btn mr-5")
                             //Au click on a la key de la room
                             .click(() => { enterRoom(value.lib.removeSpaces + "#" + value.id) })
+                    )
+                    .append(
+                        "&nbsp;"
+                    )
+                    .append(
+                        $("<button/>")
+                            .text("Supprimer")
+                            .attr("type", "button")
+                            .addClass("btn btn-danger btn-sm room-btn ml-5")
+                            //Au click on a la key de la room
+                            .click(() => { deleteRoom(value.id) })
                     )
                 );
             //Ajout dans le listing
@@ -165,7 +179,7 @@ function init(){
     /*
         Fonctions de la Room Box
      */
-    $("#returnLobby").click(function(){
+    $(".returnLobby").click(function(){
        exitRoom();
     });
 
@@ -191,7 +205,7 @@ function init(){
     /*
         Fonctions WebSocket
      */
-    const socket = new WebSocket(`wss://${location.hostname}:3000`);
+    const socket = new WebSocket(`ws://${location.hostname}:9930`);
 
     socket.addEventListener("open", function() {
         console.log("Connexion réussie au serveur WebSocket");
@@ -202,10 +216,12 @@ function init(){
 
     socket.addEventListener("close", function(){
         console.log("La connexion au serveur WebSocket a été perdue");
+        updateState("noConnection", true);
     });
 
     socket.addEventListener("error", function(){
         console.log("Une erreur a eu lieu lors de la communication avec le serveur Websocket");
+        updateState("noConnection", true);
     });
 
     socket.addEventListener("message", function(e) { analyzeMessage(e.data) });
@@ -233,6 +249,15 @@ function init(){
                 case 'canvas':
                     store[rcvData[0].code].paint = rcvData[0].content;
                     actualizeRoom(true);
+                    break;
+                case 'refreshRoomsList':
+                    exitRoom();
+                    break;
+                case 'animate':
+                    animateRoom(rcvData[0]);
+                    break;
+                default:
+                    exitRoom();
                     break;
             }
         }catch (e) {
@@ -311,6 +336,42 @@ function init(){
         }
     }
 
+    //Créer une nouvelle salle
+    const createNewRoom = () => {
+        const newRoomName = $("#newRoomInput").val();
+        if(state.newRoom && newRoomName.length > 3){
+            sendMessage(
+                {
+                    content: newRoomName,
+                    type: 'newRoom'
+                }, true
+            )
+            setTimeout(exitRoom, 500);
+            $("#newRoomInput").val("");
+        }
+    }
+
+    //Supprimer la room
+    const deleteRoom = (roomId) => {
+        sendMessage(
+            {
+                content: roomId,
+                type: 'deleteRoom'
+            }, true
+        )
+        setTimeout(exitRoom, 500);
+    }
+
+    //Animer la room
+    const animateRoom = (rcvData) => {
+        if(globalRoomCode === rcvData.code){
+            $("#room").addClass("animate__animated animate__faster animate__" + rcvData.content);
+            setTimeout(function (){
+                $("#room").removeClass("animate__animated animate__faster animate__" + rcvData.content);
+            }, 600);
+        }
+    }
+
     //Send drawing
     sendDrawing = () => {
         store[globalRoomCode].paint = JSON.stringify(canvas);
@@ -330,6 +391,23 @@ function init(){
             {
                 content: " - <i><b>A nettoyé le tableau</b></i>",
                 type: 'msg'
+            }
+        )
+    })
+
+    $("#newRoomBtn").click(function(){
+        updateState("newRoom", true);
+    })
+
+    $("#createNewRoom").click(function(){
+        createNewRoom();
+    })
+
+    $(".animateRoom").click(function (){
+        sendMessage(
+            {
+                content: this.id,
+                type: 'animate'
             }
         )
     })

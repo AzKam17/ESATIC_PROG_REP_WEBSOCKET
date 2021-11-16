@@ -113,11 +113,11 @@ class MessageHandler implements MessageComponentInterface
                 foreach ($this->roomManager->getRooms() as $r){
                     //Si la room est trouvée on enregistre dans la base de données
                     if($r->getId() === intval($msg1->getCode())){
-                        //$this->bus->dispatch(new SaveMessage($r, $msg1));
-                        $msg1->setCode(null);
+                        $this->bus->dispatch(new SaveMessage($r, $msg1));
+                        /*$msg1->setCode(null);
                         $msg1->setRoom($r);
                         $this->em->persist($msg1);
-                        $this->em->flush();
+                        $this->em->flush();*/
                     }
                 }
 
@@ -169,11 +169,7 @@ class MessageHandler implements MessageComponentInterface
                 foreach ($this->roomManager->getRooms() as $r){
                     //Si la room est trouvée on enregistre dans la base de données
                     if($r->getId() === intval($msg1->getCode())){
-                        //$this->bus->dispatch(new SaveMessage($r, $msg1));
-                        $msg1->setCode(null);
-                        $msg1->setRoom($r);
-                        $this->em->persist($msg1);
-                        $this->em->flush();
+                        $this->bus->dispatch(new SaveMessage($r, $msg1));
                     }
                 }
 
@@ -197,6 +193,83 @@ class MessageHandler implements MessageComponentInterface
                                             strtolower($msg1->getRoom()->getLib()
                                             )
                                         )).'#'.$msg1->getRoom()->getId()
+                                ]
+                            ]
+                        )
+                    );
+                }
+            }else if($type === "newRoom"){
+                $this->roomManager->addRoom( (new Room())->setLib($msg1->getContent()) );
+                $this->em->persist($this->roomManager);
+                $this->em->flush();
+                foreach ($this->connections as $connection){
+                    if($connection === $from){
+                        continue;
+                    }
+                    $connection->send(
+                      json_encode(
+                          [
+                              [
+                                "type" => "refreshRoomsList"
+                              ]
+                          ]
+                      )
+                    );
+                }
+            }else if($type === "deleteRoom"){
+                $r = $this->roomRepo->find(
+                    [
+                        "id" => $msg1->getContent()
+                    ]
+                );
+                if($r){
+                    $this->em->remove($r);
+                    $this->em->flush();
+                    foreach ($this->connections as $connection){
+                        if($connection === $from){
+                            continue;
+                        }
+                        $connection->send(
+                            json_encode(
+                                [
+                                    [
+                                        "type" => "refreshRoomsList"
+                                    ]
+                                ]
+                            )
+                        );
+                    }
+                }
+            }else if($type === "animate"){
+                //On recherche la salle à laquelle appartient le message
+                $room = new Room();
+                foreach ($this->roomManager->getRooms() as $r){
+                    //Si la room est trouvée on enregistre dans la base de données
+                    if($r->getId() === intval($msg1->getCode())){
+                        $room = $r;
+                    }
+                }
+
+                foreach ($this->connections as $connection){
+                    $connection->send(
+                        json_encode(
+                            [
+                                [
+                                    "content" => $msg1->getContent(),
+                                    "type" => "animate",
+                                    "code" => implode("", explode(" ",strtolower($room->getLib()))).'#'.$room->getId()
+                                ]
+                            ]
+                        )
+                    );
+                }
+            }else{
+                foreach ($this->connections as $connection){
+                    $connection->send(
+                        json_encode(
+                            [
+                                [
+                                    "type" => "refreshRoomsList"
                                 ]
                             ]
                         )
